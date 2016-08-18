@@ -22,8 +22,6 @@ import java.util.Random;
 @WebAppConfiguration
 public class MiAnalyzeEsApplicationTests {
 
-    @Autowired
-    private TransactionEventRepository transactionEventRepository;
 
     @Test
     public void contextLoads() {

@@ -24,7 +24,7 @@ public class RabbitCardTransactionListener {
     @Autowired
     private CardTransactionEventRepository cardTransactionEventRepository;
 
-    @SubscribeEvent(channelName = "analyze.channel.cardtransaction",eventStore = EventStore.RABBITMQ)
+    @SubscribeEvent(channelName = "${analyze.cardtransaction.queue}",eventStore = EventStore.RABBITMQ)
     public void receiveCardTransaction(DialogueEvent dialogueEvent) {
 
         // Get the object

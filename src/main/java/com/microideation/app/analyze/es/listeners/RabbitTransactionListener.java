@@ -22,7 +22,7 @@ public class RabbitTransactionListener {
     @Autowired
     private TransactionEventRepository transactionEventRepository;
 
-    @SubscribeEvent(channelName = "analyze.channel.transaction",eventStore = EventStore.RABBITMQ)
+    @SubscribeEvent(channelName = "${analyze.transaction.queue}",eventStore = EventStore.RABBITMQ)
     public void receiveTransaction(DialogueEvent dialogueEvent) {
 
         // Get the object

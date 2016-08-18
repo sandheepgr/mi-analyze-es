@@ -12,3 +12,9 @@ spring:
     password: rabbitmq
 server:
   port: 8082
+
+analyze:
+  cardtransaction:
+    queue: analyze.channel.cardtransaction2
+  transaction:
+    queue: analyze.channel.transaction2
