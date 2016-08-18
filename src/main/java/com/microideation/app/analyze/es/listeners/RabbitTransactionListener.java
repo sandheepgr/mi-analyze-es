@@ -9,6 +9,7 @@ import com.microideation.app.dialogue.event.DialogueEvent;
 import com.microideation.app.dialogue.event.EventStore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,6 +22,10 @@ public class RabbitTransactionListener {
 
     @Autowired
     private TransactionEventRepository transactionEventRepository;
+
+    @Value("${analyze.transaction.parentid}")
+    private String defaultParentId;
+
 
     @SubscribeEvent(channelName = "${analyze.transaction.queue}",eventStore = EventStore.RABBITMQ)
     public void receiveTransaction(DialogueEvent dialogueEvent) {
@@ -52,7 +57,18 @@ public class RabbitTransactionListener {
         transactionEvent.setTxnDate(transactionResource.getTxnDate());
         transactionEvent.setAmount(transactionResource.getTxnAmount());
         transactionEvent.setActor(transactionResource.getTxnLoyaltyId());
-        transactionEvent.setParentId(transactionResource.getTxnMerchantNo().toString());
+
+        // Check if the default parent id is specified
+        if ( defaultParentId == null || defaultParentId.equals("") || defaultParentId.equals("0")) {
+
+            transactionEvent.setParentId(transactionResource.getTxnMerchantNo().toString());
+
+        } else {
+
+            transactionEvent.setParentId(defaultParentId);
+
+        }
+
         transactionEvent.setEventType(getEventTypeForTransaction(transactionResource.getTxnType()));
         transactionEvent.setEventLocation(Long.toString(transactionResource.getTxnLocation()==null?0:transactionResource.getTxnLocation()));
         transactionEvent.setRewardCurrencyId(transactionResource.getTxnRewardCurrencyId());

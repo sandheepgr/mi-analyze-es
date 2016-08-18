@@ -9,6 +9,7 @@ import com.microideation.app.dialogue.event.DialogueEvent;
 import com.microideation.app.dialogue.event.EventStore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -23,6 +24,10 @@ public class RabbitCardTransactionListener {
 
     @Autowired
     private CardTransactionEventRepository cardTransactionEventRepository;
+
+    @Value("${analyze.cardtransaction.parentid}")
+    private String defaultParentId;
+
 
     @SubscribeEvent(channelName = "${analyze.cardtransaction.queue}",eventStore = EventStore.RABBITMQ)
     public void receiveCardTransaction(DialogueEvent dialogueEvent) {
@@ -52,7 +57,18 @@ public class RabbitCardTransactionListener {
         // Set the fields
         cardTransactionEvent.setActor(cardTransactionResource.getCtxCardNumber());
         cardTransactionEvent.setTimestamp(new Date(cardTransactionResource.getCtxTxnTimestamp().getTime()));
-        cardTransactionEvent.setParentId(Long.toString(cardTransactionResource.getCtxTxnTerminal()));
+
+        // Check if the parent Id is specified
+        if ( defaultParentId == null || defaultParentId.equals("") || defaultParentId.equals("0")) {
+
+            cardTransactionEvent.setParentId(Long.toString(cardTransactionResource.getCtxTxnTerminal()));
+
+        } else {
+
+            cardTransactionEvent.setParentId(defaultParentId);
+
+        }
+
         cardTransactionEvent.setCrmId(Long.toString(cardTransactionResource.getCtxCrmId()));
         cardTransactionEvent.setCtxAmount(cardTransactionResource.getCtxTxnAmount());
         cardTransactionEvent.setCtxReference(cardTransactionResource.getCtxReference());

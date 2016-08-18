@@ -15,6 +15,8 @@ server:
 
 analyze:
   cardtransaction:
-    queue: analyze.channel.cardtransaction2
+    queue: analyze.channel.cardtransaction
+    parentid: 0
   transaction:
-    queue: analyze.channel.transaction2
+    queue: analyze.channel.transaction
+    parentid: 0
