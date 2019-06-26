@@ -6,10 +6,9 @@ spring:
       repositories:
         enabled: true
   rabbitmq:
-    host: 192.168.56.20
-    port: 5672
-    username: rabbitmq
-    password: rabbitmq
+    host: 172.30.0.111
+    username: rabbitci
+    password: RLXL7RTFK7NJ9MJ
 server:
   port: 8082
 
